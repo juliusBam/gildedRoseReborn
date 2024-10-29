@@ -1,6 +1,6 @@
 package gildedRoseReborn.managers;
 
-import gildedRoseReborn.entities.BaseProduct;
+import gildedRoseReborn.entities.products.BaseProduct;
 import gildedRoseReborn.entities.Discount;
 import gildedRoseReborn.entities.Promotion;
 

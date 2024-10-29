@@ -1,7 +1,7 @@
 package gildedRoseReborn.managers;
 
 // DiscountManager.java
-import gildedRoseReborn.entities.BaseProduct;
+import gildedRoseReborn.entities.products.BaseProduct;
 import gildedRoseReborn.entities.Discount;
 
 import java.util.List;

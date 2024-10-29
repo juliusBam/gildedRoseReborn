@@ -1,10 +1,11 @@
 package gildedRoseReborn.engines;
 
 // PricingEngine.java
-import gildedRoseReborn.entities.BaseProduct;
+import gildedRoseReborn.entities.products.BaseProduct;
 import gildedRoseReborn.entities.Discount;
 import gildedRoseReborn.services.CurrencyService;
 
+import java.util.Date;
 import java.util.List;
 
 public class PricingEngine {
@@ -15,7 +16,7 @@ public class PricingEngine {
     }
 
     public double calculatePrice(BaseProduct product, List<Discount> discounts, String currencyCode) {
-        double finalPrice = product.calculatePrice();
+        double finalPrice = product.calculatePrice(new Date());
 
         for (Discount discount : discounts) {
             finalPrice -= finalPrice * (discount.getPercentage() / 100);

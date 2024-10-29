@@ -2,11 +2,12 @@ package gildedRoseReborn;
 
 import gildedRoseReborn.engines.PricingEngine;
 import gildedRoseReborn.entities.Discount;
-import gildedRoseReborn.entities.Product;
+import gildedRoseReborn.entities.products.*;
 import gildedRoseReborn.managers.DiscountManager;
 import gildedRoseReborn.services.*;
 import gildedRoseReborn.ui.UserInterface;
 
+import java.util.Date;
 import java.util.List;
 
 public class Main {
@@ -21,14 +22,18 @@ public class Main {
         ReportsModule reportsModule = new ReportsModule(reportsService);
 
         // Example products
-        Product product1 = new Product("Apple", 1.0, "Fruit");
-        Product product2 = new Product("Banana", 0.5, "Fruit");
-        Product product3 = new Product("Legendary Sword", 150.0, "Legendary");
+        BaseProduct legendarySword = new LegendaryItem("Legendary sword", 1.0, 70, 10, new Date(2024, 10, 25));
+        BaseProduct conjuredItem = new ConjuredItem("Conjured Item", 1.5, 50, 5, new Date(2024, 10, 21));
+        BaseProduct genericProduct = new GenericProduct("Generic product", 2, 15, 4, new Date(2024, 10, 23));
+        BaseProduct cheesyPeesy = new Cheese("Aging Brie", 2, 10, 4, new Date(2024, 10, 21));
+        BaseProduct concertPasses = new BackstagePass("Tickets to concert for Arch Enemy", 3, 12, 5, new Date(2024, 10, 19));
 
         // Adding products to simulate a catalog
-        cartService.addToCart(product1, 3);  // Adds 3 Apples to cart
-        cartService.addToCart(product2, 2);  // Adds 2 Bananas to cart
-        cartService.addToCart(product3, 1);  // Adds 1 Legendary Sword to cart
+        cartService.addToCart(legendarySword, 3);  // Adds 3 Apples to cart
+        cartService.addToCart(conjuredItem, 2);  // Adds 2 Bananas to cart
+        cartService.addToCart(genericProduct, 1);  // Adds 1 Legendary Sword to cart
+        cartService.addToCart(cheesyPeesy, 5);
+        cartService.addToCart(concertPasses, 2);
 
         // User Interface for interacting with the system
         UserInterface ui = new UserInterface(cartService, pricingEngine, discountManager, orderService, reportsModule);
