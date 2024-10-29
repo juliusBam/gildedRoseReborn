@@ -2,7 +2,7 @@ package gildedRoseReborn.services;
 
 // OrderService.java
 import gildedRoseReborn.engines.PricingEngine;
-import gildedRoseReborn.entities.BaseProduct;
+import gildedRoseReborn.entities.products.BaseProduct;
 import gildedRoseReborn.entities.Order;
 import gildedRoseReborn.managers.DiscountManager;
 

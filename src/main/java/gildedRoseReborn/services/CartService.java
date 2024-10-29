@@ -1,7 +1,7 @@
 package gildedRoseReborn.services;
 import gildedRoseReborn.engines.PricingEngine;
 import gildedRoseReborn.entities.Discount;
-import gildedRoseReborn.entities.Product;
+import gildedRoseReborn.entities.products.BaseProduct;
 import gildedRoseReborn.managers.DiscountManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,15 +14,15 @@ import java.util.List;
 @Getter
 @Setter
 public class CartService {
-    private Map<Product, Integer> cartItems = new HashMap<>();
+    private Map<BaseProduct, Integer> cartItems = new HashMap<>();
 
     // Add a product to the cart with the specified quantity
-    public void addToCart(Product product, int quantity) {
+    public void addToCart(BaseProduct product, int quantity) {
         cartItems.put(product, cartItems.getOrDefault(product, 0) + quantity);
     }
 
     // Remove a specified quantity of a product from the cart, or remove completely if quantity is zero or less
-    public void removeFromCart(Product product, int quantity) {
+    public void removeFromCart(BaseProduct product, int quantity) {
         if (cartItems.containsKey(product)) {
             int currentQuantity = cartItems.get(product);
             int newQuantity = currentQuantity - quantity;
@@ -43,8 +43,8 @@ public class CartService {
     // Calculate total price of all items in the cart, considering discounts and pricing rules
     public double calculateTotalPrice(PricingEngine pricingEngine, DiscountManager discountManager, String currency) {
         double total = 0;
-        for (Map.Entry<Product, Integer> entry : cartItems.entrySet()) {
-            Product product = entry.getKey();
+        for (Map.Entry<BaseProduct, Integer> entry : cartItems.entrySet()) {
+            BaseProduct product = entry.getKey();
             int quantity = entry.getValue();
             List<Discount> discounts = discountManager.getApplicableDiscounts(product, quantity);
 
@@ -55,7 +55,7 @@ public class CartService {
     }
 
     // Retrieve the items in the cart
-    public Map<Product, Integer> getCartItems() {
+    public Map<BaseProduct, Integer> getCartItems() {
         return new HashMap<>(cartItems);
     }
 }

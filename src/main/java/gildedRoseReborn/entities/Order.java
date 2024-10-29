@@ -1,5 +1,6 @@
 package gildedRoseReborn.entities;
 
+import gildedRoseReborn.entities.products.BaseProduct;
 import lombok.Getter;
 import lombok.Setter;
 
