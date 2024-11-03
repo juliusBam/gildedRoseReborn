@@ -2,16 +2,16 @@ package gildedRoseReborn.core.services;
 
 // PricingEngine.java
 import gildedRoseReborn.core.contracts.models.Priceable;
-import gildedRoseReborn.supporting.currency.CurrencyService;
+import gildedRoseReborn.supporting.currency.contracts.ICurrencyService;
 import gildedRoseReborn.supporting.discountPromotions.contracts.models.IDiscount;
 
 import java.util.Date;
 import java.util.List;
 
 public class PricingEngine implements gildedRoseReborn.core.contracts.services.IPricingEngine {
-    private CurrencyService currencyService;
+    private ICurrencyService currencyService;
 
-    public PricingEngine(CurrencyService currencyService) {
+    public PricingEngine(ICurrencyService currencyService) {
         this.currencyService = currencyService;
     }
 
