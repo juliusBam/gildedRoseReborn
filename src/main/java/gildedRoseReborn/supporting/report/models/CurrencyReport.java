@@ -8,6 +8,4 @@ import lombok.Data;
 public class CurrencyReport {
     private String currencyCode;
     private double totalTransactions;
-
-    // Constructors, Getters, and Setters
 }

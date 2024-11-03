@@ -8,6 +8,4 @@ import lombok.Data;
 public class InventoryReport {
     private String productName;
     private int quantityAvailable;
-
-    // Constructors, Getters, and Setters
 }

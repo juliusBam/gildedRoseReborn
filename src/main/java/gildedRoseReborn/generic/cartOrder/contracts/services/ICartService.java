@@ -17,10 +17,12 @@ public interface ICartService {
     void clearCart();
 
     // Calculate total price of all items in the cart, considering discounts and pricing rules
-    double calculateTotalPrice(IPricingEngine IPricingEngine, IDiscountService IDiscountService, String currency);
+    double calculateTotalPrice(String currency);
 
     // Retrieve the items in the cart
     Map<Priceable, Integer> getCartItems();
 
     void setCartItems(Map<Priceable, Integer> cartItems);
+
+    void buyProducts(String currencyCode);
 }

@@ -12,11 +12,11 @@ public class ReportService {
         return List.of(new SaleReport("Apple", 100, 200)); // Example data
     }
 
-    public List<InventoryReport> getInventoryStatus() {
+    public List<InventoryReport> getInventoryReports() {
         return List.of(new InventoryReport("Apple", 50)); // Example data
     }
 
-    public List<CurrencyReport> getCurrencyUsage() {
+    public List<CurrencyReport> getCurrencyReport() {
         return List.of(new CurrencyReport("USD", 1000)); // Example data
     }
 }

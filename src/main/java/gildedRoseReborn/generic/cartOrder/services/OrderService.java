@@ -4,7 +4,6 @@ package gildedRoseReborn.generic.cartOrder.services;
 import gildedRoseReborn.core.contracts.services.IProductService;
 import gildedRoseReborn.core.services.PricingEngine;
 import gildedRoseReborn.generic.cartOrder.contracts.models.IOrder;
-import gildedRoseReborn.generic.cartOrder.contracts.services.ICartService;
 import gildedRoseReborn.generic.cartOrder.contracts.services.IOrderService;
 import gildedRoseReborn.generic.cartOrder.entities.Order;
 import gildedRoseReborn.core.contracts.models.Priceable;
@@ -14,6 +13,7 @@ import gildedRoseReborn.supporting.discountPromotions.services.PromotionService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class OrderService implements IOrderService {
 
@@ -25,16 +25,14 @@ public class OrderService implements IOrderService {
         this.productService = productService;
     }
 
-    public void processOrder(ICartService cartService, String currencyCode) {
-        List<Priceable> orderedProducts = new ArrayList<>(cartService.getCartItems().keySet());
-
+    public void processOrder(Map<Priceable, Integer> cartItems, double totalPrice, String currencyCode) {
         // Check if enough products are available
         boolean canFulfillOrder = true;
-        for (Priceable product : orderedProducts) {
-            int cartQuantity = cartService.getCartItems().get(product);
-            int availableQuantity = productService.getProductQuantity(product);
+        for (var entry : cartItems.entrySet()) {
+            int cartQuantity = entry.getValue();
+            int availableQuantity = productService.getProductQuantity(entry.getKey());
             if (availableQuantity < cartQuantity) {
-                System.out.println("Insufficient stock for " + product.getName() + ". Available: " + availableQuantity + ", Requested: " + cartQuantity);
+                System.out.println("Insufficient stock for " + entry.getKey().getName() + ". Available: " + availableQuantity + ", Requested: " + cartQuantity);
                 canFulfillOrder = false;
             }
         }
@@ -44,11 +42,8 @@ public class OrderService implements IOrderService {
             return;
         }
 
-        // Calculate total price if products are available
-        double totalPrice = cartService.calculateTotalPrice(new PricingEngine(new CurrencyService()), new DiscountService(List.of(), new PromotionService()), currencyCode);
-
         // Create and store the order
-        IOrder order = new Order(orderedProducts, totalPrice, currencyCode);
+        IOrder order = new Order(new ArrayList<>(cartItems.keySet()), totalPrice, currencyCode);
         orders.add(order);
 
         // Logic to handle order status, payment, etc.

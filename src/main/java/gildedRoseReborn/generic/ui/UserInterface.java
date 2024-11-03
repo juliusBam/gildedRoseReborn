@@ -6,8 +6,10 @@ import gildedRoseReborn.core.contracts.services.IProductService;
 import gildedRoseReborn.generic.cartOrder.contracts.services.ICartService;
 import gildedRoseReborn.generic.cartOrder.contracts.services.IOrderService;
 import gildedRoseReborn.supporting.discountPromotions.contracts.services.IDiscountService;
+import gildedRoseReborn.supporting.report.contracts.IReportUI;
 import gildedRoseReborn.supporting.report.services.ReportModule;
 import gildedRoseReborn.supporting.report.services.ReportService;
+import gildedRoseReborn.supporting.report.ui.ReportUI;
 
 import java.util.Scanner;
 
@@ -21,7 +23,7 @@ public class UserInterface {
     private ProductCatalogUI productCatalogUI;
     private CartUI cartUI;
     private OrderUI orderUI;
-    private ReportUI reportUI;
+    private IReportUI reportUI;
 
     public UserInterface(ICartService cartService, IPricingEngine pricingEngine, IDiscountService discountService, IOrderService orderService, IProductService productService, ReportService reportService) {
         this.cartService = cartService;
@@ -33,7 +35,7 @@ public class UserInterface {
         this.productCatalogUI = new ProductCatalogUI(productService);
         this.cartUI = new CartUI(cartService, pricingEngine, discountService);
         this.orderUI = new OrderUI(orderService);
-        this.reportUI = new ReportUI(reportService);
+        this.reportUI = new ReportUI(reportService, new ReportModule());
     }
 
     public void start() {
@@ -100,7 +102,7 @@ public class UserInterface {
                     System.out.println("Enter currency code for order (e.g., USD, EUR, GBP):");
                     scanner.nextLine();  // Consume newline
                     String orderCurrency = scanner.nextLine();
-                    cartService.processOrder(orderService, orderCurrency); // Process the order
+                    cartService.buyProducts(orderCurrency); // Process the order
                     break;
 
                 case 6:
