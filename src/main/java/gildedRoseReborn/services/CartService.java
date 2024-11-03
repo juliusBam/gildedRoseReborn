@@ -46,7 +46,7 @@ public class CartService {
         for (Map.Entry<BaseProduct, Integer> entry : cartItems.entrySet()) {
             BaseProduct product = entry.getKey();
             int quantity = entry.getValue();
-            List<Discount> discounts = discountManager.getApplicableDiscounts(product, quantity);
+            List<Discount> discounts = discountManager.getApplicableDiscounts(quantity);
 
             double itemTotal = pricingEngine.calculatePrice(product, discounts, currency) * quantity;
             total += itemTotal;
