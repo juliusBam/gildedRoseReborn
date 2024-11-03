@@ -34,7 +34,6 @@ public class Main {
         ICartService ICartService = new CartService(productService);
         IOrderService IOrderService = new OrderService(productService);
         ReportService reportService = new ReportService();
-        ReportModule reportModule = new ReportModule(reportService);
 
         // Example products
         Priceable legendarySword = new LegendaryItem("Legendary sword", 1.0, 70, 10, new Date(2024, 10, 25));
@@ -51,7 +50,7 @@ public class Main {
         ICartService.addToCart(concertPasses, 2);
 
         // User Interface for interacting with the system
-        UserInterface ui = new UserInterface(ICartService, IPricingEngine, IDiscountService, IOrderService, reportModule);
+        UserInterface ui = new UserInterface(ICartService, IPricingEngine, IDiscountService, IOrderService, productService, reportService);
         ui.start();
     }
 }

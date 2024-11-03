@@ -1,75 +1,116 @@
 package gildedRoseReborn.generic.ui;
 
 import gildedRoseReborn.core.contracts.models.Priceable;
+import gildedRoseReborn.core.contracts.services.IPricingEngine;
+import gildedRoseReborn.core.contracts.services.IProductService;
 import gildedRoseReborn.generic.cartOrder.contracts.services.ICartService;
 import gildedRoseReborn.generic.cartOrder.contracts.services.IOrderService;
 import gildedRoseReborn.supporting.discountPromotions.contracts.services.IDiscountService;
 import gildedRoseReborn.supporting.report.services.ReportModule;
+import gildedRoseReborn.supporting.report.services.ReportService;
 
-import java.util.Date;
 import java.util.Scanner;
 
 public class UserInterface {
-    private ICartService ICartService;
-    private gildedRoseReborn.core.contracts.services.IPricingEngine IPricingEngine;
-    private IDiscountService IDiscountService;
-    private IOrderService IOrderService;
-    private ReportModule reportModule;
+    private ICartService cartService;
+    private IPricingEngine pricingEngine;
+    private IDiscountService discountService;
+    private IOrderService orderService;
+    private IProductService productService;
 
-    public UserInterface(ICartService ICartService, gildedRoseReborn.core.contracts.services.IPricingEngine IPricingEngine, IDiscountService IDiscountService, IOrderService IOrderService, ReportModule reportModule) {
-        this.ICartService = ICartService;
-        this.IPricingEngine = IPricingEngine;
-        this.IDiscountService = IDiscountService;
-        this.IOrderService = IOrderService;
-        this.reportModule = reportModule;
+    private ProductCatalogUI productCatalogUI;
+    private CartUI cartUI;
+    private OrderUI orderUI;
+    private ReportUI reportUI;
+
+    public UserInterface(ICartService cartService, IPricingEngine pricingEngine, IDiscountService discountService, IOrderService orderService, IProductService productService, ReportService reportService) {
+        this.cartService = cartService;
+        this.pricingEngine = pricingEngine;
+        this.discountService = discountService;
+        this.orderService = orderService;
+        this.productService = productService;
+
+        this.productCatalogUI = new ProductCatalogUI(productService);
+        this.cartUI = new CartUI(cartService, pricingEngine, discountService);
+        this.orderUI = new OrderUI(orderService);
+        this.reportUI = new ReportUI(reportService);
     }
 
     public void start() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("\n===== Product Management System =====");
-            System.out.println("1. View Cart Total");
-            System.out.println("2. Process Order");
-            System.out.println("3. Generate Reports");
+            System.out.println("1. View All Stored Products");
+            System.out.println("2. Add Product to Cart");
+            System.out.println("3. Remove Product from Cart");
+            System.out.println("4. View Cart Total");
+            System.out.println("5. Process Order");
+            System.out.println("6. Generate Reports");
+            System.out.println("7. List Processed Orders");
             System.out.println("0. Exit");
 
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    // View cart total in different currencies
-                    System.out.println("Enter currency code (e.g., USD, EUR, GBP):");
-                    scanner.nextLine();  // Consume newline
-                    String currencyCode = scanner.nextLine();
-
-                    for (Priceable product : this.ICartService.getCartItems().keySet()) {
-                        System.out.println("Product Name: " + product.getName() + " x" + this.ICartService.getCartItems().get(product) + " times");
-                        System.out.println("############# Base price " + product.calculatePrice(new Date()));
-                    }
-
-                    double total = ICartService.calculateTotalPrice(IPricingEngine, IDiscountService, currencyCode);
-                    System.out.println("Cart Total in " + currencyCode + ": " + total);
+                    productCatalogUI.viewAllStoredProducts(); // View all stored products
                     break;
 
                 case 2:
+                    // Add product to cart
+                    System.out.println("Enter Product Name:");
+                    scanner.nextLine();  // Consume newline
+                    String productName = scanner.nextLine();
+                    System.out.println("Enter Quantity:");
+                    int quantityToAdd = scanner.nextInt();
+
+                    Priceable productToAdd = productService.findProductByName(productName); // Assuming this method exists
+                    if (productToAdd != null) {
+                        cartUI.addToCart(productToAdd, quantityToAdd); // Add to cart
+                    } else {
+                        System.out.println("Product not found.");
+                    }
+                    break;
+
+                case 3:
+                    // Remove product from cart
+                    System.out.println("Enter Product Name:");
+                    scanner.nextLine();  // Consume newline
+                    String productNameToRemove = scanner.nextLine();
+                    System.out.println("Enter Quantity to Remove:");
+                    int quantityToRemove = scanner.nextInt();
+
+                    Priceable productToRemove = productService.findProductByName(productNameToRemove); // Assuming this method exists
+                    if (productToRemove != null) {
+                        cartUI.removeFromCart(productToRemove, quantityToRemove); // Remove from cart
+                    } else {
+                        System.out.println("Product not found.");
+                    }
+                    break;
+
+                case 4:
+                    // View cart total
+                    System.out.println("Enter currency code (e.g., USD, EUR, GBP):");
+                    scanner.nextLine();  // Consume newline
+                    String currencyCode = scanner.nextLine();
+                    cartUI.viewCartTotal(currencyCode); // View total price in the cart
+                    break;
+
+                case 5:
                     // Process order
                     System.out.println("Enter currency code for order (e.g., USD, EUR, GBP):");
                     scanner.nextLine();  // Consume newline
                     String orderCurrency = scanner.nextLine();
-
-                    IOrderService.processOrder(ICartService, orderCurrency);
-                    ICartService.clearCart(); // Clear the cart after processing the order
+                    cartService.processOrder(orderService, orderCurrency); // Process the order
                     break;
 
-                case 3:
+                case 6:
                     // Generate reports
-                    System.out.println("Generating Sales Report:");
-                    reportModule.generateSalesReport();
+                    reportUI.generateReports();
+                    break;
 
-                    System.out.println("\nGenerating Inventory Status Report:");
-                    reportModule.generateInventoryStatus();
-
-                    System.out.println("\nGenerating Currency Usage Report:");
-                    reportModule.generateCurrencyUsage();
+                case 7:
+                    // List processed orders
+                    orderUI.listProcessedOrders();
                     break;
 
                 case 0:
