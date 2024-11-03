@@ -13,7 +13,7 @@ public class DiscountManager {
         this.discounts = discounts;
     }
 
-    public List<Discount> getApplicableDiscounts(BaseProduct product, int quantity) {
+    public List<Discount> getApplicableDiscounts(int quantity) {
         return discounts.stream()
                 .filter(discount -> discount.isApplicable(quantity))
                 .toList();
